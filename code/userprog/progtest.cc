@@ -1,11 +1,11 @@
-// progtest.cc 
+// progtest.cc
 //      Test routines for demonstrating that Nachos can load
-//      a user program and execute it.  
+//      a user program and execute it.
 //
 //      Also, routines for testing the Console hardware device.
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
@@ -89,12 +89,21 @@ ConsoleTest (const char *in, const char *out)
       {
 	  readAvail->P ();	// wait for character to arrive
 	  ch = console->GetChar ();
-	  console->PutChar (ch);	// echo it!
-	  writeDone->P ();	// wait for write to finish
-	  if (ch == 'q') {
-	      printf ("Nothing more, bye!\n");
+    if (ch == 'q' || ch == EOF) {
+	      printf ("Au revoir\n");
 	      break;		// if q, quit
 	  }
+    if(ch != '\n'){
+      console->PutChar ('<');
+      writeDone->P ();
+    }
+	  console->PutChar (ch);	// echo it!
+    writeDone->P ();
+    if(ch != '\n'){
+      console->PutChar ('>');
+	    writeDone->P ();
+    }
+
       }
     delete console;
     delete readAvail;
