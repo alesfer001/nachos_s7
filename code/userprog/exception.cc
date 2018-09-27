@@ -1,4 +1,4 @@
-// exception.cc 
+// exception.cc
 //      Entry point into the Nachos kernel from user programs.
 //      There are two kinds of things that can cause control to
 //      transfer back to here from user code:
@@ -9,7 +9,7 @@
 //
 //      exceptions -- The user code does something that the CPU can't handle.
 //      For instance, accessing memory that doesn't exist, arithmetic errors,
-//      etc.  
+//      etc.
 //
 //      Interrupts (which can also cause control to transfer from user
 //      code into the Nachos kernel) are handled elsewhere.
@@ -18,9 +18,10 @@
 // Everything else core dumps.
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
+#include <stdlib.h>
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
@@ -32,12 +33,12 @@
 static void
 UpdatePC ()
 {
-    int pc = machine->ReadRegister (PCReg);
-    machine->WriteRegister (PrevPCReg, pc);
-    pc = machine->ReadRegister (NextPCReg);
-    machine->WriteRegister (PCReg, pc);
-    pc += 4;
-    machine->WriteRegister (NextPCReg, pc);
+  int pc = machine->ReadRegister (PCReg);
+  machine->WriteRegister (PrevPCReg, pc);
+  pc = machine->ReadRegister (NextPCReg);
+  machine->WriteRegister (PCReg, pc);
+  pc += 4;
+  machine->WriteRegister (NextPCReg, pc);
 }
 
 
@@ -55,63 +56,74 @@ UpdatePC ()
 //              arg3 -- r6
 //              arg4 -- r7
 //
-//      The result of the system call, if any, must be put back into r2. 
+//      The result of the system call, if any, must be put back into r2.
 //
 // And don't forget to increment the pc before returning. (Or else you'll
 // loop making the same system call forever!
 //
-//      "which" is the kind of exception.  The list of possible exceptions 
+//      "which" is the kind of exception.  The list of possible exceptions
 //      are in machine.h.
 //----------------------------------------------------------------------
 
 void
 ExceptionHandler (ExceptionType which)
 {
-    int type = machine->ReadRegister (2);
+  int type = machine->ReadRegister (2);
 
-    switch (which)
+  switch (which){
+    case SyscallException:
+    {
+      switch (type)
       {
-	case SyscallException:
-          {
-	    switch (type)
-	      {
-		case SC_Halt:
-		  {
-		    DEBUG ('s', "Shutdown, initiated by user program.\n");
-		    interrupt->Halt ();
-		    break;
-		  }
-	      case SC_Exit:
-		{
-		  int type2 = machine->ReadRegister (4);
-		  printf("EXIT Syscall\n");
-		  printf("This : %d\n", type2);
-		  interrupt->Halt ();
-		  break;
-		}
-		default:
-		  {
-		    printf("Unimplemented system call %d\n", type);
-		    ASSERT(FALSE);
-		  }
-	      }
-
-	    // Do not forget to increment the pc before returning!
-	    UpdatePC ();
-	    break;
-	  }
-
-	case PageFaultException:
-	  if (!type) {
-	    printf("NULL dereference at PC %x!\n", machine->registers[PCReg]);
-	    ASSERT (FALSE);
-	  } else {
-	    printf ("Page Fault at address %x at PC %x\n", type, machine->registers[PCReg]);
-	    ASSERT (FALSE);	// For now
-	  }
-
-	default:
-	  printf ("Unexpected user mode exception %d %d at PC %x\n", which, type, machine->registers[PCReg]);
-	  ASSERT (FALSE);
+        case SC_Halt:
+        {
+          DEBUG ('s', "Shutdown, initiated by user program.\n");
+          interrupt->Halt ();
+          break;
+        }
+        case SC_Exit:
+        {
+          int type2 = machine->ReadRegister (4);
+          printf("EXIT Syscall\n");
+          printf("This : %d\n", type2);
+          interrupt->Halt ();
+          break;
+        }
+        #ifdef CHANGED
+        case SC_PutChar:
+        {
+          DEBUG ('s', "PutChar, initiated by user program.\n");
+          int type2 = machine->ReadRegister (4);
+          if(type2 == '\n')
+            interrupt->Halt ();
+          printf("HELLO!\n");
+          printf("This : %c\n", type2);
+          break;
+        }
+        #endif
+        default:
+        {
+          printf("Unimplemented system call %d\n", type);
+          ASSERT(FALSE);
+        }
       }
+
+      // Do not forget to increment the pc before returning!
+      UpdatePC ();
+      break;
+    }
+
+    case PageFaultException:
+    if (!type) {
+      printf("NULL dereference at PC %x!\n", machine->registers[PCReg]);
+      ASSERT (FALSE);
+    } else {
+      printf ("Page Fault at address %x at PC %x\n", type, machine->registers[PCReg]);
+      ASSERT (FALSE);	// For now
+    }
+
+    default:
+    printf ("Unexpected user mode exception %d %d at PC %x\n", which, type, machine->registers[PCReg]);
+    ASSERT (FALSE);
+  }
 }

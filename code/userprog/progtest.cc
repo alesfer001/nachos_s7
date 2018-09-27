@@ -13,6 +13,7 @@
 #include "console.h"
 #include "addrspace.h"
 #include "synch.h"
+#include "synchconsole.h"
 
 //----------------------------------------------------------------------
 // StartProcess
@@ -76,8 +77,7 @@ WriteDoneHandler (void *arg)
 //      the output.  Stop when the user types a 'q'.
 //----------------------------------------------------------------------
 
-void
-ConsoleTest (const char *in, const char *out)
+void ConsoleTest (const char *in, const char *out)
 {
     char ch;
 
@@ -108,4 +108,27 @@ ConsoleTest (const char *in, const char *out)
     delete console;
     delete readAvail;
     delete writeDone;
+
+
 }
+
+#ifdef CHANGED
+void SynchConsoleTest (const char * in, const char * out){
+  char ch;
+  SynchConsole * test_synchconsole = new SynchConsole(in, out);
+
+  while ((ch = test_synchconsole->SynchGetChar()) != EOF){
+    if(ch != '\n')
+      test_synchconsole->SynchPutChar('<');
+    test_synchconsole->SynchPutChar(ch);
+    if(ch != '\n')
+      test_synchconsole->SynchPutChar('>');
+  }
+
+
+  fprintf(stderr, "EOF detected in SynchConsole!\n");
+
+  delete test_synchconsole;
+}
+
+#endif //CHANGED

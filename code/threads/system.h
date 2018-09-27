@@ -1,8 +1,8 @@
-// system.h 
+// system.h
 //      All global variables used in Nachos are defined here.
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #ifndef SYSTEM_H
@@ -47,6 +47,13 @@ extern SynchDisk *synchDisk;
 #ifdef NETWORK
 #include "post.h"
 extern PostOffice *postOffice;
+#endif
+
+#ifdef CHANGED
+  #ifdef USER_PROGRAM
+    #include "synchconsole.h"
+    extern SynchConsole* mysynch_console;
+  #endif
 #endif
 
 #endif // SYSTEM_H
