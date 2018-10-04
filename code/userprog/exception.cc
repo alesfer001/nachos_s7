@@ -83,9 +83,9 @@ ExceptionHandler (ExceptionType which)
         }
         case SC_Exit:
         {
-          int type2 = machine->ReadRegister (4);
+          int register_value = machine->ReadRegister (4);
           printf("EXIT Syscall\n");
-          printf("This : %d\n", type2);
+          printf("This : %d\n", register_value);
           interrupt->Halt ();
           break;
         }
@@ -93,11 +93,28 @@ ExceptionHandler (ExceptionType which)
         case SC_PutChar:
         {
           DEBUG ('s', "PutChar, initiated by user program.\n");
-          int type2 = machine->ReadRegister (4);
-          if(type2 == '\n')
+          int register_value = machine->ReadRegister (4);
+          if(register_value == '\n')
             interrupt->Halt ();
           printf("HELLO!\n");
-          printf("This : %c\n", type2);
+          printf("This : %c\n", register_value);
+          break;
+        }
+        case SC_PutString:
+        {
+          DEBUG ('s', "PutString, initiated by user program.\n");
+          int register_value = machine->ReadRegister (4);
+          printf("HELLO!\n");
+          char *buffer = (char *)malloc(MAX_STRING_SIZE * sizeof(char));
+          copyStringFromMachine(register_value, buffer, MAX_STRING_SIZE);
+          mysynch_console->SynchPutString(buffer);
+          int c;
+          // If String is longer than MAX_STRING_SIZE
+          if(machine->ReadMem(register_value+MAX_STRING_SIZE, sizeof(char), &c)){
+            // Copy remaining string in buffer
+            copyStringFromMachine(register_value+MAX_STRING_SIZE, buffer, MAX_STRING_SIZE);
+            mysynch_console->SynchPutString(buffer);
+          }
           break;
         }
         #endif

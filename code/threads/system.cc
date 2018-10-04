@@ -184,16 +184,7 @@ Initialize (int argc, char **argv)
 
 #ifdef USER_PROGRAM
     machine = new Machine (debugUserProg);	// this must come first
-
-    int copyStringFromMachine(int from, char *to, unsigned size){
-      char *tmp = malloc(sizeof(char)*(size+1));
-      for(int i =0 ; i < size ; i++){
-
-      }
-      machine->ReadMem(from, , to);
-      to = to + '\0';
-      return size;
-    }
+    mysynch_console = new SynchConsole(NULL, NULL);
 #endif
 
 #ifdef FILESYS
@@ -208,6 +199,21 @@ Initialize (int argc, char **argv)
     postOffice = new PostOffice (netname, rely, 10);
 #endif
 }
+
+#ifdef USER_PROGRAM
+  int copyStringFromMachine(int from, char *to, unsigned size){
+    int c;
+    unsigned i;
+    for(i=0 ; i < size; i++){
+      machine->ReadMem(from+i, sizeof(char), &c);
+      to[i]=(char)c;
+      if(to[i]=='\0')
+        break;
+    }
+    to[i]='\0';
+    return i;
+  }
+#endif
 
 //----------------------------------------------------------------------
 // Cleanup

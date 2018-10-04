@@ -50,9 +50,12 @@ extern PostOffice *postOffice;
 #endif
 
 #ifdef CHANGED
+  #define MAX_STRING_SIZE 20
+
   #ifdef USER_PROGRAM
     #include "synchconsole.h"
     extern SynchConsole* mysynch_console;
+    int copyStringFromMachine(int from, char *to, unsigned size);
   #endif
 #endif
 

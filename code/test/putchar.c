@@ -1,5 +1,4 @@
 #include "syscall.h"
-#include <stdlib.h>
 
 void print(char c, int n){
   int i;
@@ -13,8 +12,10 @@ void print(char c, int n){
 
 int main(){
   print('a',4);
+  /*
   char *mystring = "TEST";
   char *newstring = malloc(5*sizeof(char));
   copyStringFromMachine(mystring, *newstring, sizeof(mystring));
+  */
   Halt();
 }
