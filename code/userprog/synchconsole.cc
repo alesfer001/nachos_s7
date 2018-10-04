@@ -31,17 +31,18 @@ void SynchConsole::SynchPutChar(int ch){
     writeDone-> P();
 }
 int SynchConsole::SynchGetChar(){
-  /*int ch = incoming;
-
-  incoming = EOF;*/
   readAvail-> P();
   int ch = console->GetChar();
   return ch;
 }
 
 void SynchConsole::SynchPutString(const char s[]){
-// ...
+  for(int i=0; s[i]!='\0'; i++){
+    console->PutChar(s[i]);
+    writeDone-> P();
+  }
 }
+
 
 void SynchConsole::SynchGetString(char* s, int n){
 // ...

@@ -184,6 +184,16 @@ Initialize (int argc, char **argv)
 
 #ifdef USER_PROGRAM
     machine = new Machine (debugUserProg);	// this must come first
+
+    int copyStringFromMachine(int from, char *to, unsigned size){
+      char *tmp = malloc(sizeof(char)*(size+1));
+      for(int i =0 ; i < size ; i++){
+
+      }
+      machine->ReadMem(from, , to);
+      to = to + '\0';
+      return size;
+    }
 #endif
 
 #ifdef FILESYS
