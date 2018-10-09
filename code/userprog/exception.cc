@@ -96,7 +96,7 @@ ExceptionHandler (ExceptionType which)
           int register_value = machine->ReadRegister (4);
           if(register_value == '\n')
             interrupt->Halt ();
-          printf("This : %c\n", register_value);
+          printf("PutChar This : %c\n", register_value);
           break;
         }
         case SC_PutString:
@@ -121,6 +121,37 @@ ExceptionHandler (ExceptionType which)
             }
           }
           free(buffer);
+          break;
+        }
+        case SC_GetChar:
+        {
+          DEBUG ('s', "GetChar, initiated by user program.\n");
+          int register_value = mysynch_console->SynchGetChar();
+          if(register_value == EOF){
+            interrupt->Halt ();
+          }
+          machine->WriteRegister(2, register_value);
+          printf("GetChar This : %c\n", register_value);
+          break;
+        }
+        case SC_GetString:
+        {
+          DEBUG ('s', "GetString, initiated by user program.\n");
+          char *buffer = (char *)malloc((MAX_STRING_SIZE) * sizeof(char));
+          int sout_addr = machine->ReadRegister (4);
+          int size = machine->ReadRegister (5);
+
+          mysynch_console->SynchGetString(buffer, size);
+          for(int i=0; i<size; i++){
+            printf("%c", buffer[i]);
+          }
+          printf("\n");
+
+          char *sout = (char *)sout_addr;
+          copyStringToMachine(sout, buffer, size);
+
+          free(buffer);
+          free(sout);
           break;
         }
         #endif

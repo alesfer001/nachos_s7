@@ -38,14 +38,16 @@ int SynchConsole::SynchGetChar(){
 
 void SynchConsole::SynchPutString(const char s[]){
   for(int i=0; s[i]!='\0'; i++){
-    console->PutChar(s[i]);
-    writeDone-> P();
+    SynchPutChar(s[i]);
   }
 }
 
-
 void SynchConsole::SynchGetString(char* s, int n){
-// ...
+  for(int i=0; i < n; i++){
+    s[i] = SynchGetChar();
+    printf("%c", s[i]);
+  }
+  printf("\n");
 }
 
 #endif // CHANGED

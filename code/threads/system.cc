@@ -212,6 +212,23 @@ Initialize (int argc, char **argv)
     to[i]='\0';
     return i;
   }
+  int copyStringToMachine(char *to, void* from, unsigned size){
+    int c;
+    int addr;
+    unsigned i;
+    for(i=0 ; i < size; i++){
+      addr = *((int *)(from+i));
+      printf("%d\n",addr);
+      printf("%c\n",addr);
+      machine->ReadMem(addr, sizeof(char), &c);
+      printf("Hello\n");
+      to[i]=(char)c;
+      if(to[i]=='\0')
+        break;
+    }
+    to[i]='\0';
+    return i;
+  }
 #endif
 
 //----------------------------------------------------------------------

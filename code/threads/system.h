@@ -56,6 +56,7 @@ extern PostOffice *postOffice;
     #include "synchconsole.h"
     extern SynchConsole* mysynch_console;
     int copyStringFromMachine(int from, char *to, unsigned size);
+    int copyStringToMachine(char *to, void* from, unsigned size);
   #endif
 #endif
 
