@@ -6,16 +6,11 @@ void print(char c, int n){
   for (i = 0; i < n; i++) {
     PutChar(c + i);
   }
-  PutChar('\n');
+  //PutChar('\n');
   #endif
 }
 
 int main(){
   print('a',4);
-  /*
-  char *mystring = "TEST";
-  char *newstring = malloc(5*sizeof(char));
-  copyStringFromMachine(mystring, *newstring, sizeof(mystring));
-  */
-  Halt();
+  //Halt();
 }

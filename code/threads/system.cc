@@ -184,8 +184,7 @@ Initialize (int argc, char **argv)
 
 #ifdef USER_PROGRAM
     machine = new Machine (debugUserProg);	// this must come first
-    mysynch_console = new SynchConsole(NULL, NULL);
-#endif
+    #endif
 
 #ifdef FILESYS
     synchDisk = new SynchDisk ("DISK");

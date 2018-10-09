@@ -4,11 +4,11 @@ void print(char *s){
   int i;
   #if 1
   PutString(s);
-  PutChar('\n');
+  PutString("\n");
   #endif
 }
 
 int main(){
-  print("aaaabbbbbbbbbbbbbbbbc");
+  print("aaaabbbbbbbbbbbbbbbc"); //20
   Halt();
 }

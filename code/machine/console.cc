@@ -1,4 +1,4 @@
-// console.cc 
+// console.cc
 //	Routines to simulate a serial port to a console device.
 //	A console has input (a keyboard) and output (a display).
 //	These are each simulated by operations on UNIX files.
@@ -10,7 +10,7 @@
 //  DO NOT CHANGE -- part of the machine emulation
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
@@ -19,7 +19,7 @@
 #include <langinfo.h>
 
 // Dummy functions because C++ is weird about pointers to member functions
-static void ConsoleReadPoll(void *c) 
+static void ConsoleReadPoll(void *c)
 { Console *console = (Console *)c; console->CheckCharAvail(); }
 static void ConsoleWriteDone(void *c)
 { Console *console = (Console *)c; console->WriteDone(); }
@@ -39,7 +39,7 @@ static void ConsoleWriteDone(void *c)
 
 int Console::stdin_busy;
 
-Console::Console(const char *readFile, const char *writeFile, VoidFunctionPtr readAvailHandler, 
+Console::Console(const char *readFile, const char *writeFile, VoidFunctionPtr readAvailHandler,
 		VoidFunctionPtr writeDoneHandler, void *callArg)
 {
     if (readFile == NULL)
@@ -77,6 +77,7 @@ Console::~Console()
 	Close(readFileNo);
     else
 	stdin_busy = 0;
+
     readFileNo = -1;
     if (writeFileNo != 1)
 	Close(writeFileNo);
@@ -96,8 +97,8 @@ Console::~Console()
 //
 //	Only read it in if there is buffer space for it (if the previous
 //	character has been grabbed out of the buffer by the Nachos kernel).
-//	Invoke the "read" interrupt handler, once the character has been 
-//	put into the buffer. 
+//	Invoke the "read" interrupt handler, once the character has been
+//	put into the buffer.
 //----------------------------------------------------------------------
 
 void
@@ -152,7 +153,7 @@ Console::CheckCharAvail()
 
     if (cont)
 	// schedule the next time to poll for a packet
-	interrupt->Schedule(ConsoleReadPoll, this, ConsoleTime, 
+	interrupt->Schedule(ConsoleReadPoll, this, ConsoleTime,
 			    ConsoleReadInt);
 
     if (n) {
@@ -196,7 +197,7 @@ Console::GetChar()
 
 //----------------------------------------------------------------------
 // Console::PutChar()
-// 	Write a character to the simulated display, schedule an interrupt 
+// 	Write a character to the simulated display, schedule an interrupt
 //	to occur in the future, and return.
 //----------------------------------------------------------------------
 

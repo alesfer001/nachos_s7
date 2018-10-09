@@ -96,7 +96,6 @@ ExceptionHandler (ExceptionType which)
           int register_value = machine->ReadRegister (4);
           if(register_value == '\n')
             interrupt->Halt ();
-          printf("HELLO!\n");
           printf("This : %c\n", register_value);
           break;
         }
@@ -104,17 +103,24 @@ ExceptionHandler (ExceptionType which)
         {
           DEBUG ('s', "PutString, initiated by user program.\n");
           int register_value = machine->ReadRegister (4);
-          printf("HELLO!\n");
-          char *buffer = (char *)malloc(MAX_STRING_SIZE * sizeof(char));
-          copyStringFromMachine(register_value, buffer, MAX_STRING_SIZE);
+          char *buffer = (char *)malloc((MAX_STRING_SIZE) * sizeof(char));
+          int nb_cop = copyStringFromMachine(register_value, buffer, MAX_STRING_SIZE);
           mysynch_console->SynchPutString(buffer);
-          int c;
+
           // If String is longer than MAX_STRING_SIZE
-          if(machine->ReadMem(register_value+MAX_STRING_SIZE, sizeof(char), &c)){
-            // Copy remaining string in buffer
-            copyStringFromMachine(register_value+MAX_STRING_SIZE, buffer, MAX_STRING_SIZE);
-            mysynch_console->SynchPutString(buffer);
+          int c;
+          int cursor = 0;
+          while(nb_cop == MAX_STRING_SIZE){
+            cursor+=MAX_STRING_SIZE; // current reading position
+            nb_cop = 0; // number of copied characters
+            machine->ReadMem(register_value+cursor, sizeof(char), &c);
+            if(c !='\0'){
+              // Copy remaining string in buffer
+              nb_cop = copyStringFromMachine(register_value+cursor, buffer, MAX_STRING_SIZE);
+              mysynch_console->SynchPutString(buffer);
+            }
           }
+          free(buffer);
           break;
         }
         #endif

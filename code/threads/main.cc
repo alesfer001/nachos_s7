@@ -116,7 +116,7 @@ main (int argc, char **argv)
 	  if (!strcmp (*argv, "-x"))
 	    {			// run a user program
 		ASSERT (argc > 1);
-    SynchConsole *mysynch_console = new SynchConsole(NULL, NULL);
+    mysynch_console = new SynchConsole(NULL, NULL);
 		StartProcess (*(argv + 1));
 		argCount = 2;
 	    }
