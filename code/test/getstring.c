@@ -3,8 +3,8 @@
 void print(){
   int i;
   #if 1
-  char s[3];
-  GetString(s, 3);
+  char s[51];
+  GetString(s, 51);
   PutString(s);
   #endif
 }

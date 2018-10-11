@@ -212,23 +212,16 @@ Initialize (int argc, char **argv)
     to[i]='\0';
     return i;
   }
-  int copyStringToMachine(char *to, void* from, unsigned size){
-    int c;
-    int addr;
-    unsigned i;
-    for(i=0 ; i < size; i++){
-      addr = *((int *)(from+i));
-      printf("%d\n",addr);
-      printf("%c\n",addr);
-      machine->ReadMem(addr, sizeof(char), &c);
-      printf("Hello\n");
-      to[i]=(char)c;
-      if(to[i]=='\0')
-        break;
-    }
-    to[i]='\0';
-    return i;
+
+int copyStringToMachine(int to, const char from[], unsigned size){
+  unsigned i;
+  for(i = 0 ; from[i] != EOF && i<size ; i++){
+    machine->WriteMem(to+i, sizeof(char), from[i]);
   }
+  machine->WriteMem(to+i, sizeof(char), '\0');
+  return i;
+}
+
 #endif
 
 //----------------------------------------------------------------------

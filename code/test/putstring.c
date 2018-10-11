@@ -9,6 +9,6 @@ void print(char *s){
 }
 
 int main(){
-  print("aaaabbbbbbbbbbbbbbbc"); //20
+  print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"); //50
   Halt();
 }

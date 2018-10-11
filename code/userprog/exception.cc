@@ -141,18 +141,28 @@ ExceptionHandler (ExceptionType which)
           int sout_addr = machine->ReadRegister (4);
           int size = machine->ReadRegister (5);
 
-          mysynch_console->SynchGetString(buffer, size);
-          for(int i=0; i<size; i++){
-            printf("%c", buffer[i]);
+          int string_size = (MAX_STRING_SIZE > size) ? size: MAX_STRING_SIZE;
+
+          mysynch_console->SynchGetString(buffer, string_size);
+
+          int nb_cop = copyStringToMachine(sout_addr, buffer, string_size);
+          int cursor=0;
+          while(nb_cop == MAX_STRING_SIZE){
+            size-=MAX_STRING_SIZE;
+            string_size = (MAX_STRING_SIZE > size) ? size: MAX_STRING_SIZE;
+            cursor+=MAX_STRING_SIZE; // current reading position
+            nb_cop = 0; // number of copied characters
+
+            mysynch_console->SynchGetString(buffer, string_size);
+            nb_cop = copyStringToMachine(sout_addr+cursor, buffer, string_size);
           }
-          printf("\n");
-
-          char *sout = (char *)sout_addr;
-          copyStringToMachine(sout, buffer, size);
-
           free(buffer);
-          free(sout);
           break;
+        }
+        case SC_PutInt:
+        {
+          DEBUG ('s', "PutInt, initiated by user program.\n");
+          int input = machine->ReadRegister (4);
         }
         #endif
         default:

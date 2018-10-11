@@ -45,9 +45,7 @@ void SynchConsole::SynchPutString(const char s[]){
 void SynchConsole::SynchGetString(char* s, int n){
   for(int i=0; i < n; i++){
     s[i] = SynchGetChar();
-    printf("%c", s[i]);
   }
-  printf("\n");
 }
 
 #endif // CHANGED
