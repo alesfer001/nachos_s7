@@ -1,13 +1,14 @@
 #include "syscall.h"
 
-void print(int n){
+void print(){
   #if 1
+  int n=0;
+  GetInt(&n);
   PutInt(n);
   PutString("\n");
   #endif
 }
 
 int main(){
-  int n = -2147483648;
-  print(n);
+  print();
 }

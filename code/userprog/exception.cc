@@ -25,6 +25,8 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
+#include "math.h"
+#include "limits.h"
 
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
@@ -162,7 +164,43 @@ ExceptionHandler (ExceptionType which)
         case SC_PutInt:
         {
           DEBUG ('s', "PutInt, initiated by user program.\n");
+          char *buffer = (char *)malloc((MAX_STRING_SIZE) * sizeof(char));
           int input = machine->ReadRegister (4);
+
+          int num_length = snprintf(buffer, sizeof(buffer), "%d", input);
+          mysynch_console->SynchPutString(buffer);
+
+          // If integer size is larger than buffer size
+          while(num_length > MAX_STRING_SIZE){
+            if(input > 0){
+              input-=(pow(10,num_length-MAX_STRING_SIZE) * atoi(buffer));
+              num_length = snprintf(buffer, sizeof(buffer), "%d", input);
+            }
+            else{
+              input-=(pow(10,num_length-MAX_STRING_SIZE) * atoi(buffer));
+              input = -input;
+              num_length = snprintf(buffer, sizeof(buffer), "%d", input);
+            }
+            mysynch_console->SynchPutString(buffer);
+          }
+          free(buffer);
+          break;
+        }
+        case SC_GetInt:
+        {
+          DEBUG ('s', "GetInt, initiated by user program.\n");
+
+          char *buffer = (char *)malloc((MAX_STRING_SIZE) * sizeof(char));
+
+          mysynch_console->SynchGetString(buffer, MAX_STRING_SIZE);
+
+          int i;
+          int sout_addr = machine->ReadRegister (4);
+
+          sscanf(buffer, "%d", &i);
+          machine->WriteMem(sout_addr, sizeof(int), i);
+
+          break;
         }
         #endif
         default:
