@@ -27,6 +27,7 @@
 #include "syscall.h"
 #include "math.h"
 #include "limits.h"
+#include "userthread.h"
 
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
@@ -97,8 +98,8 @@ ExceptionHandler (ExceptionType which)
           DEBUG ('s', "PutChar, initiated by user program.\n");
           int register_value = machine->ReadRegister (4);
           if(register_value == '\n')
-            interrupt->Halt ();
-          printf("PutChar This : %c\n", register_value);
+             interrupt->Halt ();
+	        mysynch_console->SynchPutChar(register_value);
           break;
         }
         case SC_PutString:
@@ -133,7 +134,6 @@ ExceptionHandler (ExceptionType which)
             interrupt->Halt ();
           }
           machine->WriteRegister(2, register_value);
-          printf("GetChar This : %c\n", register_value);
           break;
         }
         case SC_GetString:
@@ -164,25 +164,12 @@ ExceptionHandler (ExceptionType which)
         case SC_PutInt:
         {
           DEBUG ('s', "PutInt, initiated by user program.\n");
-          char *buffer = (char *)malloc((MAX_STRING_SIZE) * sizeof(char));
+          char *buffer = (char *)malloc((MAX_INT_SIZE+2) * sizeof(char));
           int input = machine->ReadRegister (4);
-
-          int num_length = snprintf(buffer, sizeof(buffer), "%d", input);
+	  // MAX_INT_SIZE + "-" + "\0"
+          snprintf(buffer, (MAX_INT_SIZE+2) * sizeof(char) , "%d", input);
           mysynch_console->SynchPutString(buffer);
 
-          // If integer size is larger than buffer size
-          while(num_length > MAX_STRING_SIZE){
-            if(input > 0){
-              input-=(pow(10,num_length-MAX_STRING_SIZE) * atoi(buffer));
-              num_length = snprintf(buffer, sizeof(buffer), "%d", input);
-            }
-            else{
-              input-=(pow(10,num_length-MAX_STRING_SIZE) * atoi(buffer));
-              input = -input;
-              num_length = snprintf(buffer, sizeof(buffer), "%d", input);
-            }
-            mysynch_console->SynchPutString(buffer);
-          }
           free(buffer);
           break;
         }
@@ -190,16 +177,28 @@ ExceptionHandler (ExceptionType which)
         {
           DEBUG ('s', "GetInt, initiated by user program.\n");
 
-          char *buffer = (char *)malloc((MAX_STRING_SIZE) * sizeof(char));
-
-          mysynch_console->SynchGetString(buffer, MAX_STRING_SIZE);
+          char *buffer = (char *)malloc((MAX_INT_SIZE+1) * sizeof(char));
+          // MAX_INT_SIZE + "-"
+          mysynch_console->SynchGetString(buffer, MAX_INT_SIZE+1);
 
           int i;
           int sout_addr = machine->ReadRegister (4);
-
           sscanf(buffer, "%d", &i);
-          machine->WriteMem(sout_addr, sizeof(int), i);
-
+          machine->WriteMem(sout_addr, sizeof(i), i);
+          break;
+        }
+        case SC_CreateThread:
+        {
+          DEBUG ('s', "CreateThread, initiated by user program.\n");
+          int func = machine->ReadRegister (4);
+          int args = machine->ReadRegister (5);
+          do_ThreadCreate(func, args);
+          break;
+        }
+        case SC_ExitThread:
+        {
+          DEBUG ('s', "ExitThread, initiated by user program.\n");
+          do_ThreadExit();
           break;
         }
         #endif

@@ -1,15 +1,13 @@
 #include "syscall.h"
 
-void print(){
+void print(char *s){
   int i;
   #if 1
-  char s[51];
-  GetString(s, 14);
   PutString(s);
-  PutString("\n");
   #endif
 }
 
 int main(){
-  print();
+  print("aaaaaaaaaaaaaab\n"); //16
+  Halt();
 }

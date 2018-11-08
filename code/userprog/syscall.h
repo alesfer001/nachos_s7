@@ -37,6 +37,10 @@
 #define SC_GetString 14
 #define SC_PutInt 15
 #define SC_GetInt 16
+#define SC_CreateThread 17
+#define SC_ExitThread 18
+
+
 
 #ifdef IN_USER_MODE
 
@@ -149,6 +153,10 @@ void GetString(char *s, int n);
 void PutInt(int n);
 
 void GetInt(int *n);
+
+int ThreadCreate(void f(void*arg), void*arg);
+
+void ThreadExit(void);
 
 #endif // IN_USER_MODE
 

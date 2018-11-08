@@ -4,7 +4,7 @@ void print(){
   int i;
   #if 1
   char s[51];
-  GetString(s, 14);
+  GetString(s, 7);
   PutString(s);
   PutString("\n");
   #endif

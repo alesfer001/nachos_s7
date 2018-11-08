@@ -35,7 +35,7 @@ __start:
 	jal	main
 	move	$4,$0
 	/* Changed */
-	jal	Halt	 /* if we return from main, exit(0) */
+	jal	Exit	 /* if we return from main, exit(0) */
 	.end __start
 
 /* -------------------------------------------------------------
@@ -194,6 +194,22 @@ GetInt:
 	syscall
 	j	$31
 	.end GetInt
+
+	.globl CreateThread
+	.ent	CreateThread
+CreateThread:
+	addiu $2,$0,SC_CreateThread
+	syscall
+	j	$31
+	.end CreateThread
+
+	.globl ExitThread
+	.ent	ExitThread
+ExitThread:
+	addiu $2,$0,SC_ExitThread
+	syscall
+	j	$31
+	.end ExitThread
 
 /* dummy function to keep gcc happy */
         .globl  __main

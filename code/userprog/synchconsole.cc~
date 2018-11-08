@@ -27,16 +27,12 @@ SynchConsole::~SynchConsole(){
 }
 
 void SynchConsole::SynchPutChar(int ch){
-  //P
     console->PutChar(ch);
-  //V
     writeDone-> P();
 }
 int SynchConsole::SynchGetChar(){
   readAvail-> P();
-  // P
   int ch = console->GetChar();
-  // V
   return ch;
 }
 
@@ -54,7 +50,7 @@ void SynchConsole::SynchGetString(char* s, int n){
       break;
     }
   }
-  s[i+1] = '\0';
+  s[i] = '\0';
 }
 
 #endif // CHANGED

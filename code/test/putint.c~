@@ -8,8 +8,6 @@ void print(int n){
 }
 
 int main(){
-  print(2147483647);
-  print(2147483648);
-  print(-2147483648);
-  print(-2147483649);
+  int n = -2147483649;
+  print(n);
 }
