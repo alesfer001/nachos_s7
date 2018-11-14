@@ -1,19 +1,31 @@
 #include "userthread.h"
 #include "thread.h"
+#include "syscall.h"
 
 int do_ThreadCreate(int f, int arg){
-  Thread *my_thread = new Thread("New Thread");
-  struct threadArgs *args = (struct threadArgs *) malloc(sizeof(struct threadArgs));
-  args->func=f;
-  args->arg=arg;
-  // size enough bitmap
+  lock_nbThreads->P();
+    Thread *my_thread = new Thread("New Thread");
+    struct threadArgs *args = (struct threadArgs *) malloc(sizeof(struct threadArgs));
+    args->func=f;
+    args->arg=arg;
+    // size enough bitmap
+
+    currentThread->space->nbThreads++;
+    printf("\nnb after create: %d\n", currentThread->space->nbThreads);
+  lock_nbThreads->V();
   my_thread->Start(StartUserThread, args);
   return 1;
 }
 
 int do_ThreadExit(){
+  lock_nbThreads->P();
+    printf("\nnb before exit: %d\n", currentThread->space->nbThreads);
+    currentThread->space->nbThreads--;
+    if (currentThread->space->nbThreads == 0){
+      interrupt->Halt();
+    }
+  lock_nbThreads->V();
   currentThread->Finish();
-  //delete threadToBeDestroyed->space;
 }
 
 

@@ -3,6 +3,7 @@
 
 #include "system.h"
 #include "syscall.h"
+#include "synch.h"
 
 struct threadArgs
 {
@@ -10,6 +11,7 @@ struct threadArgs
   int arg;
 };
 
+static Semaphore* lock_nbThreads = new Semaphore("lock threads counter", 1);
 
 extern int do_ThreadCreate(int f, int arg);
 

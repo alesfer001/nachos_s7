@@ -7,7 +7,8 @@
 
 static Semaphore* readAvail;
 static Semaphore* writeDone;
-
+static Semaphore* putSem;
+static Semaphore* getSem;
 static void ReadAvailHandler(void* arg) {
   (void) arg; readAvail->V();
 }
@@ -18,6 +19,8 @@ static void WriteDoneHandler(void* arg) {
 SynchConsole::SynchConsole(const char* in, const char* out){
   readAvail = new Semaphore("read avail", 0);
   writeDone = new Semaphore("write done", 0);
+  putSem = new Semaphore("put", 1);
+  getSem = new Semaphore("get", 1);
   console = new Console(in, out, ReadAvailHandler, WriteDoneHandler, 0);
 }
 SynchConsole::~SynchConsole(){
@@ -27,16 +30,17 @@ SynchConsole::~SynchConsole(){
 }
 
 void SynchConsole::SynchPutChar(int ch){
-  //P
+  putSem->P();
     console->PutChar(ch);
-  //V
     writeDone-> P();
+  putSem->V();
 }
 int SynchConsole::SynchGetChar(){
-  readAvail-> P();
-  // P
-  int ch = console->GetChar();
-  // V
+  getSem->P();
+    readAvail-> P();
+    int ch = console->GetChar();
+  getSem->V();
+
   return ch;
 }
 

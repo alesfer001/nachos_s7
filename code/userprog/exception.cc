@@ -86,9 +86,7 @@ ExceptionHandler (ExceptionType which)
         }
         case SC_Exit:
         {
-          int register_value = machine->ReadRegister (4);
           printf("EXIT Syscall\n");
-          printf("This : %d\n", register_value);
           interrupt->Halt ();
           break;
         }

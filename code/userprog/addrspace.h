@@ -19,6 +19,8 @@
 
 #define UserStacksAreaSize		1024	// increase this as necessary!
 
+class Semaphore;
+
 class AddrSpace:dontcopythis
 {
   public:
@@ -35,6 +37,7 @@ class AddrSpace:dontcopythis
 
     #ifdef CHANGED
       unsigned int AllocateUserStack(); // return number of pages * pageSize
+      int nbThreads;
     #endif
 
   private:

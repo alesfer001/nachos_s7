@@ -62,6 +62,10 @@ SwapHeader (NoffHeader * noffH)
 
 AddrSpace::AddrSpace (OpenFile * executable)
 {
+    #ifdef CHANGED
+      nbThreads = 0;
+    #endif
+
     NoffHeader noffH;
     unsigned int i, size;
 
