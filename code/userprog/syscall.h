@@ -39,6 +39,10 @@
 #define SC_GetInt 16
 #define SC_CreateThread 17
 #define SC_ExitThread 18
+#define SC_InitSem 19
+#define SC_DeleteSem 20
+#define SC_PLock 21
+#define SC_VUnlock 22
 
 
 
@@ -157,6 +161,14 @@ void GetInt(int *n);
 int CreateThread(void f(void*arg), void*arg);
 
 void ExitThread(void);
+
+int InitSem(int value);
+
+void DeleteSem(int value);
+
+void PLock(int value);
+
+void VUnlock(int value);
 
 #endif // IN_USER_MODE
 

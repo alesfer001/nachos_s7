@@ -50,7 +50,7 @@ static void StartUserThread(void* schmurtz){
   // Initial program counter -- must be location of "Start"
   machine->WriteRegister (PCReg, myargs->func);
   machine->WriteRegister (4, myargs->arg);
-  machine->WriteRegister (31, myargs->exit_value);
+  machine->WriteRegister (RetAddrReg, myargs->exit_value);
 
   // Need to also tell MIPS where next instruction is, because
   // of branch delay possibility

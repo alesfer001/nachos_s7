@@ -200,6 +200,28 @@ ExceptionHandler (ExceptionType which)
           do_ThreadExit();
           break;
         }
+        case SC_InitSem:
+        {
+          DEBUG ('s', "InitSem, initiated by user program.\n");
+          int value = machine->ReadRegister (4);
+          
+          break;
+        }
+        case SC_DeleteSem:
+        {
+          DEBUG ('s', "DeleteSem, initiated by user program.\n");
+          break;
+        }
+        case SC_PLock:
+        {
+          DEBUG ('s', "PLock, initiated by user program.\n");
+          break;
+        }
+        case SC_VUnlock:
+        {
+          DEBUG ('s', "VUnlock, initiated by user program.\n");
+          break;
+        }
         #endif
         default:
         {

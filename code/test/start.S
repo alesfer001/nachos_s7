@@ -216,7 +216,6 @@ ExitThread:
 	.ent	InitSem
 InitSem:
 	addiu $2,$0,SC_InitSem
-	la $6, ExitThread
 	syscall
 	j	$31
 	.end InitSem
@@ -225,7 +224,6 @@ InitSem:
 	.ent	DeleteSem
 DeleteSem:
 	addiu $2,$0,SC_DeleteSem
-	la $6, ExitThread
 	syscall
 	j	$31
 	.end DeleteSem
@@ -234,7 +232,6 @@ DeleteSem:
 	.ent	PLock
 PLock:
 	addiu $2,$0,SC_PLock
-	la $6, ExitThread
 	syscall
 	j	$31
 	.end PLock
@@ -243,7 +240,6 @@ PLock:
 	.ent	VUnlock
 VUnlock:
 	addiu $2,$0,SC_VUnlock
-	la $6, ExitThread
 	syscall
 	j	$31
 	.end VUnlock
