@@ -1,21 +1,17 @@
 #include "syscall.h"
 
 void print(char c){
-  int i;
-  for(i=0; i<5; i++)
-    PutChar(c);
+  PutChar(c);
   ExitThread();
+}
+
+void print2(char c){
+  PutChar(c);
 }
 
 int main(){
   CreateThread(print, 'A');
-  CreateThread(print, 'B');
-  CreateThread(print, 'C');
-  CreateThread(print, 'D');
-  CreateThread(print, 'E');
-  CreateThread(print, 'F');
-  CreateThread(print, 'G');
-
+  CreateThread(print2, 'B');
   while(1);
   return 0;
 }

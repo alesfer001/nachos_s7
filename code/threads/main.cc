@@ -117,6 +117,7 @@ main (int argc, char **argv)
 	    {			// run a user program
 		ASSERT (argc > 1);
     mysynch_console = new SynchConsole(NULL, NULL);
+    printf("%s\n", *(argv + 1));
 		StartProcess (*(argv + 1));
 		argCount = 2;
 	    }

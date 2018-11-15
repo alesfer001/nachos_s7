@@ -190,7 +190,8 @@ ExceptionHandler (ExceptionType which)
           DEBUG ('s', "CreateThread, initiated by user program.\n");
           int func = machine->ReadRegister (4);
           int args = machine->ReadRegister (5);
-          do_ThreadCreate(func, args);
+          int ext_value = machine->ReadRegister (6);
+          do_ThreadCreate(func, args, ext_value);
           break;
         }
         case SC_ExitThread:

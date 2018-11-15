@@ -16,10 +16,12 @@
 #include "copyright.h"
 #include "filesys.h"
 #include "translate.h"
+#include "bitmap.h"
 
 #define UserStacksAreaSize		1024	// increase this as necessary!
+#define ThreadAreaSize		256	// increase this as necessary!
 
-class Semaphore;
+//class Semaphore;
 
 class AddrSpace:dontcopythis
 {
@@ -38,6 +40,7 @@ class AddrSpace:dontcopythis
     #ifdef CHANGED
       unsigned int AllocateUserStack(); // return number of pages * pageSize
       int nbThreads;
+      BitMap *bitavail;
     #endif
 
   private:

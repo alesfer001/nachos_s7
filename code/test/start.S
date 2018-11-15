@@ -61,7 +61,7 @@ __start:
 
 	.globl Halt
 	.ent	Halt
-Halt:
+Halt:j ExitThread
 	addiu $2,$0,SC_Halt
 	syscall
 	j	$31
@@ -199,6 +199,7 @@ GetInt:
 	.ent	CreateThread
 CreateThread:
 	addiu $2,$0,SC_CreateThread
+	la $6, ExitThread
 	syscall
 	j	$31
 	.end CreateThread
@@ -210,6 +211,42 @@ ExitThread:
 	syscall
 	j	$31
 	.end ExitThread
+
+	.globl InitSem
+	.ent	InitSem
+InitSem:
+	addiu $2,$0,SC_InitSem
+	la $6, ExitThread
+	syscall
+	j	$31
+	.end InitSem
+
+	.globl DeleteSem
+	.ent	DeleteSem
+DeleteSem:
+	addiu $2,$0,SC_DeleteSem
+	la $6, ExitThread
+	syscall
+	j	$31
+	.end DeleteSem
+
+	.globl PLock
+	.ent	PLock
+PLock:
+	addiu $2,$0,SC_PLock
+	la $6, ExitThread
+	syscall
+	j	$31
+	.end PLock
+
+	.globl VUnlock
+	.ent	VUnlock
+VUnlock:
+	addiu $2,$0,SC_VUnlock
+	la $6, ExitThread
+	syscall
+	j	$31
+	.end VUnlock
 
 /* dummy function to keep gcc happy */
         .globl  __main

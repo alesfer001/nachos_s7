@@ -64,6 +64,8 @@ AddrSpace::AddrSpace (OpenFile * executable)
 {
     #ifdef CHANGED
       nbThreads = 0;
+      bitavail = new BitMap(UserStacksAreaSize / ThreadAreaSize);
+      bitavail->Mark(0);
     #endif
 
     NoffHeader noffH;

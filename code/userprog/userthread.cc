@@ -2,16 +2,23 @@
 #include "thread.h"
 #include "syscall.h"
 
-int do_ThreadCreate(int f, int arg){
+int do_ThreadCreate(int f, int arg, int exit_value){
+  int nth = currentThread->space->bitavail->Find();
+  if(nth == -1){
+    printf("Error: Unable to create thread, unsufficient memory!\n");
+    return -1;
+  }
   lock_nbThreads->P();
     Thread *my_thread = new Thread("New Thread");
+    my_thread->mybit = nth;
     struct threadArgs *args = (struct threadArgs *) malloc(sizeof(struct threadArgs));
     args->func=f;
     args->arg=arg;
+    args->exit_value=exit_value;
     // size enough bitmap
 
     currentThread->space->nbThreads++;
-    printf("\nnb after create: %d\n", currentThread->space->nbThreads);
+    printf("\nnb after create: %d, nth : %d\n", currentThread->space->nbThreads, nth);
   lock_nbThreads->V();
   my_thread->Start(StartUserThread, args);
   return 1;
@@ -19,6 +26,7 @@ int do_ThreadCreate(int f, int arg){
 
 int do_ThreadExit(){
   lock_nbThreads->P();
+    currentThread->space->bitavail->Clear(currentThread->mybit);
     printf("\nnb before exit: %d\n", currentThread->space->nbThreads);
     currentThread->space->nbThreads--;
     if (currentThread->space->nbThreads == 0){
@@ -42,6 +50,7 @@ static void StartUserThread(void* schmurtz){
   // Initial program counter -- must be location of "Start"
   machine->WriteRegister (PCReg, myargs->func);
   machine->WriteRegister (4, myargs->arg);
+  machine->WriteRegister (31, myargs->exit_value);
 
   // Need to also tell MIPS where next instruction is, because
   // of branch delay possibility

@@ -9,11 +9,12 @@ struct threadArgs
 {
   int func;
   int arg;
+  int exit_value;
 };
 
 static Semaphore* lock_nbThreads = new Semaphore("lock threads counter", 1);
 
-extern int do_ThreadCreate(int f, int arg);
+extern int do_ThreadCreate(int f, int arg, int exit_value);
 
 extern int do_ThreadExit();
 
