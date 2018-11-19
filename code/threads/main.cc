@@ -17,6 +17,7 @@
 #undef MAIN
 
 #include "utility.h"
+#include "synch.h"
 #include "system.h"
 
 #ifdef USER_PROGRAM
@@ -117,7 +118,10 @@ main (int argc, char **argv)
 	    {			// run a user program
 		ASSERT (argc > 1);
     mysynch_console = new SynchConsole(NULL, NULL);
-    printf("%s\n", *(argv + 1));
+
+    sems = (Semaphore**) malloc(MAX_SEM * sizeof(Semaphore*));
+    semavail = new BitMap(MAX_SEM);
+    
 		StartProcess (*(argv + 1));
 		argCount = 2;
 	    }

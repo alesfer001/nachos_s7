@@ -52,10 +52,15 @@ extern PostOffice *postOffice;
 #ifdef CHANGED
   #define MAX_STRING_SIZE 7
   #define MAX_INT_SIZE 10
+  #define MAX_SEM 10
 
   #ifdef USER_PROGRAM
     #include "synchconsole.h"
+    class Semaphore;
     extern SynchConsole* mysynch_console;
+
+    extern Semaphore** sems;
+    extern BitMap *semavail;
     int copyStringFromMachine(int from, char *to, unsigned size);
     int copyStringToMachine(int to, const char from[], unsigned size);
   #endif

@@ -42,6 +42,8 @@ PostOffice *postOffice;
 #ifdef CHANGED
   #ifdef USER_PROGRAM
     SynchConsole* mysynch_console;
+    Semaphore** sems;
+    BitMap *semavail;
   #endif
 #endif
 

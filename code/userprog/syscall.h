@@ -162,7 +162,7 @@ int CreateThread(void f(void*arg), void*arg);
 
 void ExitThread(void);
 
-int InitSem(int value);
+int InitSem(int *value, int semvalue);
 
 void DeleteSem(int value);
 

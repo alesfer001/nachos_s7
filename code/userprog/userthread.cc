@@ -18,7 +18,6 @@ int do_ThreadCreate(int f, int arg, int exit_value){
     // size enough bitmap
 
     currentThread->space->nbThreads++;
-    printf("\nnb after create: %d, nth : %d\n", currentThread->space->nbThreads, nth);
   lock_nbThreads->V();
   my_thread->Start(StartUserThread, args);
   return 1;
@@ -27,7 +26,6 @@ int do_ThreadCreate(int f, int arg, int exit_value){
 int do_ThreadExit(){
   lock_nbThreads->P();
     currentThread->space->bitavail->Clear(currentThread->mybit);
-    printf("\nnb before exit: %d\n", currentThread->space->nbThreads);
     currentThread->space->nbThreads--;
     if (currentThread->space->nbThreads == 0){
       interrupt->Halt();

@@ -4,8 +4,7 @@
 #include "system.h"
 #include "syscall.h"
 #include "synch.h"
-
-#define MAXSEM 10
+#include "bitmap.h"
 
 struct threadArgs
 {
@@ -15,8 +14,6 @@ struct threadArgs
 };
 
 static Semaphore* lock_nbThreads = new Semaphore("lock threads counter", 1);
-
-//static Semaphore* sems;
 
 extern int do_ThreadCreate(int f, int arg, int exit_value);
 

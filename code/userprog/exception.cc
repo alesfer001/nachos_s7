@@ -203,23 +203,36 @@ ExceptionHandler (ExceptionType which)
         case SC_InitSem:
         {
           DEBUG ('s', "InitSem, initiated by user program.\n");
+          int nth = semavail->Find();
+          if(nth == -1){
+            printf("Error: Unable to create Semaphore, unsufficient memory!\n");
+            break;
+          }
           int value = machine->ReadRegister (4);
-          
+          int semvalue = machine->ReadRegister (5);
+          sems[nth] = new Semaphore("sem", semvalue);
+          machine->WriteMem(value, sizeof(int), nth);
           break;
         }
         case SC_DeleteSem:
         {
           DEBUG ('s', "DeleteSem, initiated by user program.\n");
+          int value = machine->ReadRegister (4);
+          semavail->Clear(value);
           break;
         }
         case SC_PLock:
         {
           DEBUG ('s', "PLock, initiated by user program.\n");
+          int value = machine->ReadRegister (4);
+          sems[value]->P();
           break;
         }
         case SC_VUnlock:
         {
           DEBUG ('s', "VUnlock, initiated by user program.\n");
+          int value = machine->ReadRegister (4);
+          sems[value]->V();
           break;
         }
         #endif
