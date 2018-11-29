@@ -72,6 +72,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
     unsigned int i, size;
 
     executable->ReadAt (&noffH, sizeof (noffH), 0);
+
     if ((noffH.noffMagic != NOFFMAGIC) &&
 	(WordToHost (noffH.noffMagic) == NOFFMAGIC))
 	SwapHeader (&noffH);
@@ -97,7 +98,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
     pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++)
       {
-	  pageTable[i].physicalPage = i;	// for now, phys page # = virtual page #
+	  pageTable[i].physicalPage = //pageProvider i+1;//+ 1;	// for now, phys page # = virtual page #
 	  pageTable[i].valid = TRUE;
 	  pageTable[i].use = FALSE;
 	  pageTable[i].dirty = FALSE;
@@ -111,17 +112,15 @@ AddrSpace::AddrSpace (OpenFile * executable)
       {
 	  DEBUG ('a', "Initializing code segment, at 0x%x, size 0x%x\n",
 		 noffH.code.virtualAddr, noffH.code.size);
-	  executable->ReadAt (&(machine->mainMemory[noffH.code.virtualAddr]),
-			      noffH.code.size, noffH.code.inFileAddr);
+	  //executable->ReadAt (&(machine->mainMemory[noffH.code.virtualAddr]),noffH.code.size, noffH.code.inFileAddr);
+      ReadAtVirtual(executable, noffH.code.virtualAddr, noffH.code.size, noffH.code.inFileAddr, pageTable,  numPages);
       }
     if (noffH.initData.size > 0)
       {
 	  DEBUG ('a', "Initializing data segment, at 0x%x, size 0x%x\n",
 		 noffH.initData.virtualAddr, noffH.initData.size);
-	  executable->ReadAt (&
-			      (machine->mainMemory
-			       [noffH.initData.virtualAddr]),
-			      noffH.initData.size, noffH.initData.inFileAddr);
+	   //executable->ReadAt (&(machine->mainMemory[noffH.initData.virtualAddr]),noffH.initData.size, noffH.initData.inFileAddr);
+     ReadAtVirtual(executable, noffH.initData.virtualAddr, noffH.initData.size, noffH.initData.inFileAddr, pageTable,  numPages);
       }
 
     DEBUG ('a', "Area for stacks at 0x%x, size 0x%x\n",
@@ -159,7 +158,7 @@ AddrSpace::InitRegisters ()
     int i;
 
     for (i = 0; i < NumTotalRegs; i++)
-	machine->WriteRegister (i, 0);
+	     machine->WriteRegister (i, 0);
 
     // Initial program counter -- must be location of "Start"
     machine->WriteRegister (PCReg, USER_START_ADDRESS);
@@ -208,4 +207,24 @@ AddrSpace::RestoreState ()
 unsigned int AddrSpace::AllocateUserStack(){
   return numPages*PageSize - 256;
 }
+
+ void AddrSpace::ReadAtVirtual(OpenFile *executable, int virtualaddr, int numBytes, int position, TranslationEntry *pageTable, unsigned numPages){
+
+   TranslationEntry *my_pageTable = machine->pageTable;
+   unsigned my_numPage = machine->pageTableSize;
+   machine->pageTable = pageTable;
+   machine->pageTableSize = numPages;
+
+  char *buffer = (char *) malloc( sizeof(char) * numBytes);
+  executable->ReadAt (buffer, numBytes, position);
+
+
+  for (int i = 0; i < numBytes; i++) {
+    machine->WriteMem(virtualaddr+i, sizeof(char), buffer[i]);
+  }
+
+  machine->pageTable = my_pageTable;
+  machine->pageTableSize = my_numPage;
+}
+
 #endif

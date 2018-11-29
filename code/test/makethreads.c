@@ -22,17 +22,22 @@ void cons(char e){
   //ExitThread();
 }
 
+void put(char e){
+  PutChar(e);
+}
+
 int main(){
-  InitSem(&wait_prod, 1);
+/*  InitSem(&wait_prod, 1);
   InitSem(&wait_cons, 0);
   InitSem(&mutex, 1);
-
-  CreateThread(prod, 'A');
-  CreateThread(cons, ' ');
-  CreateThread(prod, 'B');
-  CreateThread(cons, ' ');
-  DeleteSem(wait_prod);
-  DeleteSem(wait_cons);
+*/
+  //CreateThread(prod, 'A');
+  //CreateThread(cons, ' ');
+  CreateThread(put, 'A');
+  //CreateThread(prod, 'B');
+  //CreateThread(cons, ' ');
+/*  DeleteSem(wait_prod);
+  DeleteSem(wait_cons);*/
   while(1);
   return 0;
 }

@@ -31,12 +31,12 @@ THREAD_O	:=	main.o list.o scheduler.o synch.o synchlist.o \
 			stats.o sysdep.o timer.o
 
 USERPROG_O	:=	addrspace.o bitmap.o exception.o progtest.o console.o synchconsole.o userthread.o\
-			machine.o mipssim.o translate.o
+			machine.o mipssim.o translate.o pageprovider.o
 
 VM_O		:=
 
 FILESYS_O	:=	directory.o filehdr.o filesys.o fstest.o openfile.o \
-			synchdisk.o disk.o
+			synchdisk.o disk.o 
 
 NETWORK_O	:=	nettest.o post.o network.o
 #

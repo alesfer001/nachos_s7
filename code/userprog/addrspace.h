@@ -44,6 +44,9 @@ class AddrSpace:dontcopythis
     #endif
 
   private:
+    #ifdef CHANGED
+      static void ReadAtVirtual(OpenFile *executable, int virtualaddr, int numBytes, int position, TranslationEntry *pageTable, unsigned numPages);
+    #endif
       TranslationEntry * pageTable;	// Assume linear page table translation
     // for now!
     unsigned int numPages;	// Number of pages in the virtual
