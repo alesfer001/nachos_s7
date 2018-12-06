@@ -96,17 +96,26 @@ AddrSpace::AddrSpace (OpenFile * executable)
 	   numPages, size);
 // first, set up the translation
     pageTable = new TranslationEntry[numPages];
+    #ifdef CHANGED
+    int my_page;
     for (i = 0; i < numPages; i++)
       {
-	  pageTable[i].physicalPage = //pageProvider i+1;//+ 1;	// for now, phys page # = virtual page #
-	  pageTable[i].valid = TRUE;
-	  pageTable[i].use = FALSE;
-	  pageTable[i].dirty = FALSE;
-	  pageTable[i].readOnly = FALSE;	// if the code segment was entirely on
-	  // a separate page, we could set its
-	  // pages to be read-only
+        my_page = pageProvider->GetEmptyPage();
+        if(my_page == -1){
+              for(unsigned int j = 0; j<i ; j++){
+                pageProvider->ReleasePage(j);
+              }
+            throw AddrException("No page available");
+        }
+        pageTable[i].physicalPage = my_page; //pageProvider i+1;//+ 1;	// for now, phys page # = virtual page #
+    	  pageTable[i].valid = TRUE;
+    	  pageTable[i].use = FALSE;
+    	  pageTable[i].dirty = FALSE;
+    	  pageTable[i].readOnly = FALSE;	// if the code segment was entirely on
+    	  // a separate page, we could set its
+    	  // pages to be read-only
       }
-
+    #endif
 // then, copy in the code and data segments into memory
     if (noffH.code.size > 0)
       {
@@ -139,6 +148,7 @@ AddrSpace::~AddrSpace ()
   // LB: Missing [] for delete
   // delete pageTable;
   delete [] pageTable;
+  delete pageProvider;
   // End of modification
 }
 
@@ -215,7 +225,7 @@ unsigned int AddrSpace::AllocateUserStack(){
    machine->pageTable = pageTable;
    machine->pageTableSize = numPages;
 
-  char *buffer = (char *) malloc( sizeof(char) * numBytes);
+  char buffer[numBytes];
   executable->ReadAt (buffer, numBytes, position);
 
 

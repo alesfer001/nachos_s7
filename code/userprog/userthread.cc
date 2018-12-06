@@ -25,6 +25,7 @@ int do_ThreadCreate(int f, int arg, int exit_value){
 
 int do_ThreadExit(){
   lock_nbThreads->P();
+    printf("nbthreads : %d\n", currentThread->space->nbThreads);
     currentThread->space->bitavail->Clear(currentThread->mybit);
     currentThread->space->nbThreads--;
     if (currentThread->space->nbThreads == 0){
@@ -35,7 +36,7 @@ int do_ThreadExit(){
 }
 
 
-static void StartUserThread(void* schmurtz){
+void StartUserThread(void* schmurtz){
   struct threadArgs *myargs = (struct threadArgs *) schmurtz;
   DEBUG ('x', "Thread args f : %d, args: %d\n", myargs->func, myargs->arg);
 

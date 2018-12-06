@@ -58,7 +58,9 @@ extern PostOffice *postOffice;
   #ifdef USER_PROGRAM
     #include "synchconsole.h"
     class Semaphore;
+    class PageProvider;
     extern SynchConsole* mysynch_console;
+    extern PageProvider* pageProvider;
 
     extern Semaphore** sems;
     extern BitMap *semavail;

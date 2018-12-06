@@ -28,6 +28,7 @@
 #include "math.h"
 #include "limits.h"
 #include "userthread.h"
+#include "userprocess.h"
 
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
@@ -81,6 +82,7 @@ ExceptionHandler (ExceptionType which)
         case SC_Halt:
         {
           DEBUG ('s', "Shutdown, initiated by user program.\n");
+          printf("HALT Syscall\n");
           interrupt->Halt ();
           break;
         }
@@ -152,7 +154,7 @@ ExceptionHandler (ExceptionType which)
             string_size = (MAX_STRING_SIZE > size) ? size: MAX_STRING_SIZE;
             cursor+=MAX_STRING_SIZE; // current reading position
             nb_cop = 0; // number of copied characters
-
+            
             mysynch_console->SynchGetString(buffer, string_size);
             nb_cop = copyStringToMachine(sout_addr+cursor, buffer, string_size);
           }
@@ -233,6 +235,19 @@ ExceptionHandler (ExceptionType which)
           DEBUG ('s', "VUnlock, initiated by user program.\n");
           int value = machine->ReadRegister (4);
           sems[value]->V();
+          break;
+        }
+        case SC_ForkExec:
+        {
+          DEBUG ('s', "ForkExec, initiated by user program.\n");
+          int register_value = machine->ReadRegister (4);
+          char *filename = (char *)malloc((MAX_STRING_SIZE*10) * sizeof(char));
+          int nb_cop = copyStringFromMachine(register_value, filename, MAX_STRING_SIZE*10);
+
+          int exit_value = machine->ReadRegister (5);
+
+          do_ProcessCreate(filename, exit_value);
+
           break;
         }
         #endif

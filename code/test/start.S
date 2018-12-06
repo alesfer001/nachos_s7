@@ -244,6 +244,16 @@ VUnlock:
 	j	$31
 	.end VUnlock
 
+	.globl ForkExec
+	.ent	ForkExec
+ForkExec:
+	addiu $2,$0,SC_ForkExec
+	la $5, ExitThread
+	syscall
+	j	$31
+	.end ForkExec
+
+
 /* dummy function to keep gcc happy */
         .globl  __main
         .ent    __main

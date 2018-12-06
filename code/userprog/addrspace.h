@@ -17,11 +17,19 @@
 #include "filesys.h"
 #include "translate.h"
 #include "bitmap.h"
+#include <exception>
 
 #define UserStacksAreaSize		1024	// increase this as necessary!
 #define ThreadAreaSize		256	// increase this as necessary!
 
 //class Semaphore;
+  #ifdef CHANGED
+    class AddrException{
+      public:
+        AddrException(const char* msg){}
+        ~AddrException() {}
+    };
+  #endif
 
 class AddrSpace:dontcopythis
 {

@@ -19,6 +19,6 @@ extern int do_ThreadCreate(int f, int arg, int exit_value);
 
 extern int do_ThreadExit();
 
-static void StartUserThread(void * schmurtz);
+extern void StartUserThread(void * schmurtz);
 
 #endif

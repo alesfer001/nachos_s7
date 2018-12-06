@@ -43,7 +43,8 @@
 #define SC_DeleteSem 20
 #define SC_PLock 21
 #define SC_VUnlock 22
-
+#define SC_ForkExec 23
+#define SC_ExitProc 24
 
 
 #ifdef IN_USER_MODE
@@ -169,6 +170,11 @@ void DeleteSem(int value);
 void PLock(int value);
 
 void VUnlock(int value);
+
+int ForkExec(const char *s);
+
+void ExitProc(void);
+
 
 #endif // IN_USER_MODE
 

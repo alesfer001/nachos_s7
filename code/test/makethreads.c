@@ -24,6 +24,7 @@ void cons(char e){
 
 void put(char e){
   PutChar(e);
+  ExitThread();
 }
 
 int main(){
@@ -34,6 +35,7 @@ int main(){
   //CreateThread(prod, 'A');
   //CreateThread(cons, ' ');
   CreateThread(put, 'A');
+  PutChar('B');
   //CreateThread(prod, 'B');
   //CreateThread(cons, ' ');
 /*  DeleteSem(wait_prod);

@@ -9,7 +9,11 @@ PageProvider::~PageProvider(){
 }
 
 int PageProvider::GetEmptyPage(){
-  return pageavail->Find();
+  int my_page = pageavail->Find();
+  if(my_page != -1){
+    memset(machine->mainMemory + (my_page * PageSize), 0, PageSize);
+  }
+  return my_page;
 }
 
 void PageProvider::ReleasePage(int numPage){

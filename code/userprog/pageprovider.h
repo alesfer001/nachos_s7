@@ -1,7 +1,8 @@
 #ifndef PAGEPROVIDER_H
 #define PAGEPROVIDER_H
 
-#include "machine.h"
+
+#include "system.h"
 #include "bitmap.h"
 
 class PageProvider
